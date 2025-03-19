@@ -6,17 +6,17 @@ import 'package:salam_hackathon_front/backend/api.dart';
 import 'package:salam_hackathon_front/controllers/main_controller.dart';
 
 class NewJourneyBottomSheet extends StatefulWidget {
-
   const NewJourneyBottomSheet({Key? key}) : super(key: key);
 
-  static Future<void> show(BuildContext context, Function(Map<String, dynamic>) onAddJourney) {
+  static Future<void> show(
+      BuildContext context, Function(Map<String, dynamic>) onAddJourney) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.9,
+          initialChildSize: 0.75,
           minChildSize: 0.5,
           maxChildSize: 0.95,
           builder: (_, controller) {
@@ -248,12 +248,21 @@ class _NewJourneyBottomSheetState extends State<NewJourneyBottomSheet> {
 
   final List<Map<String, String>> goals = [
     {'label': 'أهدف إلى التخصص في تطوير الويب', 'value': 'web_development'},
-    {'label': 'أهدف إلى التخصص في تطوير تطبيقات الموبايل', 'value': 'mobile_development'},
+    {
+      'label': 'أهدف إلى التخصص في تطوير تطبيقات الموبايل',
+      'value': 'mobile_development'
+    },
     {'label': 'أهدف إلى التخصص في تطوير الألعاب', 'value': 'game_development'},
-    {'label': 'أهدف إلى التخصص في علم البيانات والذكاء الاصطناعي', 'value': 'ai_data_science'},
+    {
+      'label': 'أهدف إلى التخصص في علم البيانات والذكاء الاصطناعي',
+      'value': 'ai_data_science'
+    },
     {'label': 'أهدف إلى التخصص في الأمن السيبراني', 'value': 'cybersecurity'},
     {'label': 'أهدف إلى التخصص في تحليل البيانات', 'value': 'data_analysis'},
-    {'label': 'أهدف إلى التخصص في الأنظمة المدمجة وإنترنت الأشياء', 'value': 'iot_embedded'},
+    {
+      'label': 'أهدف إلى التخصص في الأنظمة المدمجة وإنترنت الأشياء',
+      'value': 'iot_embedded'
+    },
   ];
 
   final List<Map<String, String>> levels = [
@@ -268,35 +277,53 @@ class _NewJourneyBottomSheetState extends State<NewJourneyBottomSheet> {
     }
     return frameworksByLanguage[language]!;
   }
+
   late MainController controller;
   void _handleAddJourney() {
     controller = Get.find<MainController>();
-    if (language == null || framework == null || goal == null || level == null) {
+    if (language == null ||
+        framework == null ||
+        goal == null ||
+        level == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء ملء جميع الحقول', textAlign: TextAlign.right)),
+        const SnackBar(
+          content: Text('الرجاء ملء جميع الحقول', textAlign: TextAlign.right),
+        ),
       );
       return;
     }
 
-    newLearning(controller.sessionid, language, framework, goal, level).then((response) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    newLearning(controller.sessionid, language, framework, goal, level)
+        .then((response) {
+      Navigator.pop(context); // إخفاء مؤشر التحميل
+
       if (response) {
-        // final Map<String, dynamic> data = jsonDecode(response.body);
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('تمت إضافة الرحلة بنجاح', textAlign: TextAlign.right),
           ),
         );
-        controller.refresh();
+        controller.update(); // تحديث البيانات لتظهر الرحلة الجديدة
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ ما، الرجاء المحاولة مرة أخرى', textAlign: TextAlign.right),
+          const SnackBar(
+            content: Text('حدث خطأ ما، الرجاء المحاولة مرة أخرى',
+                textAlign: TextAlign.right),
           ),
         );
       }
     });
-
   }
 
   @override
@@ -309,33 +336,40 @@ class _NewJourneyBottomSheetState extends State<NewJourneyBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward),
+                  icon: const Icon(Icons.arrow_back),
                   onPressed: () => Navigator.of(context).pop(),
                   color: const Color(0xFF4E7ED1),
                 ),
-                const Spacer(),
+                SizedBox(
+                  width: 12,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'إبدأ رحلة جديدة',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4E7ED1),
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'قم بتعبئة الخانات التالية',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF666666),
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ],
+                )
               ],
-            ),
-            const Text(
-              'إبدأ رحلة جديدة',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4E7ED1),
-              ),
-              textAlign: TextAlign.right,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'اختر لغة البرمجة وإطار العمل والأهداف التي تريد تحقيقها',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color(0xFF666666),
-              ),
-              textAlign: TextAlign.right,
             ),
             const SizedBox(height: 32),
             Expanded(
@@ -394,13 +428,17 @@ class _NewJourneyBottomSheetState extends State<NewJourneyBottomSheet> {
               ),
             ),
             ElevatedButton(
-              onPressed: language != null && framework != null && goal != null && level != null
+              onPressed: language != null &&
+                      framework != null &&
+                      goal != null &&
+                      level != null
                   ? _handleAddJourney
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4E7ED1),
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
                 disabledBackgroundColor: Colors.grey[300],
               ),
               child: const Text(
@@ -459,7 +497,8 @@ class _NewJourneyBottomSheetState extends State<NewJourneyBottomSheet> {
               fontSize: 16,
             ),
             onChanged: enabled ? onChanged : null,
-            items: items.map<DropdownMenuItem<String>>((Map<String, String> item) {
+            items:
+                items.map<DropdownMenuItem<String>>((Map<String, String> item) {
               return DropdownMenuItem<String>(
                 value: item['value'],
                 child: Text(

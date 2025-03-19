@@ -9,7 +9,11 @@ import 'package:salam_hackathon_front/views/text_response.dart';
 import '../models/models.dart';
 
 class ProjectPage extends StatefulWidget {
-  const ProjectPage({super.key, required this.p, required this.language, required this.framework});
+  const ProjectPage(
+      {super.key,
+      required this.p,
+      required this.language,
+      required this.framework});
   final Project p;
   final String language, framework;
   @override
@@ -23,10 +27,13 @@ class _ProjectPageState extends State<ProjectPage> {
     return GetBuilder<MainController>(
       init: MainController(),
       builder: (controller) => Scaffold(
-
         appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: const Color.fromARGB(
+                255, 255, 255, 255), //change your color here
+          ),
           backgroundColor: Colors.blueAccent,
-          title:  Text(
+          title: Text(
             widget.p.title,
             maxLines: 2,
             style: TextStyle(color: Colors.white, fontSize: 24),
@@ -36,21 +43,23 @@ class _ProjectPageState extends State<ProjectPage> {
         body: Column(
           children: [
             Expanded(
-              child: FutureBuilder(future: getTasks(controller.sessionid, widget.p.id ), builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Error'));
-                }
-                tasks = snapshot.data as List<Task>;
-                return ListView.builder(
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: (context, index) {
-                    return TaskCard(t: snapshot.data![index]);
-                  },
-                );
-              }),
+              child: FutureBuilder(
+                  future: getTasks(controller.sessionid, widget.p.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Error'));
+                    }
+                    tasks = snapshot.data as List<Task>;
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return TaskCard(t: snapshot.data![index]);
+                      },
+                    );
+                  }),
             ),
             Container(
               height: 50,
@@ -63,17 +72,50 @@ class _ProjectPageState extends State<ProjectPage> {
               child: SizedBox.expand(
                 child: MaterialButton(
                   onPressed: () {
-                    final currentTask = tasks.firstWhere((element) => element.completed == false);
-                    getHelp(widget.language, widget.framework, widget.p.title, currentTask.description).then((value) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AskAIPage(resp: value),
+                    try {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
+                      final currentTask = tasks
+                          .firstWhere((element) => element.completed == false);
+
+                      getHelp(widget.language, widget.framework, widget.p.title,
+                              currentTask.description)
+                          .then((value) {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AskAIPage(resp: value),
+                          ),
+                        );
+                      });
+                    } catch (e) {
+                      Navigator.pop(context);
+                      print("Eroooorrrrrrrrrr");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            '!جميع المهام مكتملة',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 3), // مدة العرض
                         ),
                       );
-                    });
+                    }
                   },
-                  child: const Text('Help', style: TextStyle(color: Colors.white),), // Add text or other content here
+                  child: const Text(
+                    'Help',
+                    style: TextStyle(color: Colors.white),
+                  ), // Add text or other content here
                 ),
               ),
             ),

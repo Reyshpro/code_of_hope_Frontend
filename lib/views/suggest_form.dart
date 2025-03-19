@@ -7,17 +7,17 @@ import 'package:salam_hackathon_front/controllers/main_controller.dart';
 import 'package:salam_hackathon_front/views/text_response.dart';
 
 class SuggestBottomSheet extends StatefulWidget {
-
   const SuggestBottomSheet({Key? key}) : super(key: key);
 
-  static Future<void> show(BuildContext context, Function(Map<String, dynamic>) onAddJourney) {
+  static Future<void> show(
+      BuildContext context, Function(Map<String, dynamic>) onAddJourney) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.9,
+          initialChildSize: 0.65,
           minChildSize: 0.5,
           maxChildSize: 0.95,
           builder: (_, controller) {
@@ -55,12 +55,21 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
 
   final List<Map<String, String>> goals = [
     {'label': 'أهدف إلى التخصص في تطوير الويب', 'value': 'web_development'},
-    {'label': 'أهدف إلى التخصص في تطوير تطبيقات الموبايل', 'value': 'mobile_development'},
+    {
+      'label': 'أهدف إلى التخصص في تطوير تطبيقات الموبايل',
+      'value': 'mobile_development'
+    },
     {'label': 'أهدف إلى التخصص في تطوير الألعاب', 'value': 'game_development'},
-    {'label': 'أهدف إلى التخصص في علم البيانات والذكاء الاصطناعي', 'value': 'ai_data_science'},
+    {
+      'label': 'أهدف إلى التخصص في علم البيانات والذكاء الاصطناعي',
+      'value': 'ai_data_science'
+    },
     {'label': 'أهدف إلى التخصص في الأمن السيبراني', 'value': 'cybersecurity'},
     {'label': 'أهدف إلى التخصص في تحليل البيانات', 'value': 'data_analysis'},
-    {'label': 'أهدف إلى التخصص في الأنظمة المدمجة وإنترنت الأشياء', 'value': 'iot_embedded'},
+    {
+      'label': 'أهدف إلى التخصص في الأنظمة المدمجة وإنترنت الأشياء',
+      'value': 'iot_embedded'
+    },
   ];
 
   final List<Map<String, String>> levels = [
@@ -69,13 +78,14 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
     {'label': 'متقدم', 'value': 'متقدم'},
   ];
 
-
   late MainController controller;
   void _handleRequestSuggest() {
     controller = Get.find<MainController>();
     if (preference == null || goal == null || level == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء ملء جميع الحقول', textAlign: TextAlign.right)),
+        const SnackBar(
+            content:
+                Text('الرجاء ملء جميع الحقول', textAlign: TextAlign.right)),
       );
       return;
     }
@@ -93,11 +103,13 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
     getSuggest(level!, goal, preference).then((response) {
       Navigator.pop(context); // Hide loading indicator
       if (response.isNotEmpty) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AskAIPage(resp: response)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AskAIPage(resp: response)));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('حدث خطأ ما، الرجاء المحاولة مرة أخرى', textAlign: TextAlign.right),
+            content: Text('حدث خطأ ما، الرجاء المحاولة مرة أخرى',
+                textAlign: TextAlign.right),
           ),
         );
       }
@@ -112,35 +124,43 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward),
+                  icon: const Icon(Icons.arrow_back),
                   onPressed: () => Navigator.of(context).pop(),
                   color: const Color(0xFF4E7ED1),
                 ),
-                const Spacer(),
+                SizedBox(
+                  width: 12,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'إبدأ رحلة جديدة',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4E7ED1),
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'اختر لغة البرمجة وإطار العمل والأهداف التي تريد تحقيقها',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF666666),
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ],
+                )
               ],
-            ),
-            const Text(
-              'إبدأ رحلة جديدة',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4E7ED1),
-              ),
-              textAlign: TextAlign.right,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'اختر لغة البرمجة وإطار العمل والأهداف التي تريد تحقيقها',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color(0xFF666666),
-              ),
-              textAlign: TextAlign.right,
             ),
             const SizedBox(height: 32),
             Expanded(
@@ -181,7 +201,6 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
                       },
                     ),
                     const SizedBox(height: 24),
-
                   ],
                 ),
               ),
@@ -193,7 +212,8 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4E7ED1),
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
                 disabledBackgroundColor: Colors.grey[300],
               ),
               child: const Text(
@@ -252,7 +272,8 @@ class _SuggestBottomSheetState extends State<SuggestBottomSheet> {
               fontSize: 16,
             ),
             onChanged: enabled ? onChanged : null,
-            items: items.map<DropdownMenuItem<String>>((Map<String, String> item) {
+            items:
+                items.map<DropdownMenuItem<String>>((Map<String, String> item) {
               return DropdownMenuItem<String>(
                 value: item['value'],
                 child: Text(

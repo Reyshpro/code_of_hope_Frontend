@@ -19,8 +19,11 @@ class _LearningPageState extends State<LearningPage> {
     return GetBuilder<MainController>(
       init: MainController(),
       builder: (controller) => Scaffold(
-
         appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: const Color.fromARGB(
+                255, 255, 255, 255), //change your color here
+          ),
           backgroundColor: Colors.blueAccent,
           title: Text(
             "${widget.l.language} - ${widget.l.framework}",
@@ -32,22 +35,27 @@ class _LearningPageState extends State<LearningPage> {
         body: Column(
           children: [
             Expanded(
-              child: FutureBuilder(future: getProjects(controller.sessionid, widget.l.id ), builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Error'));
-                }
-                return ListView.builder(
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: (context, index) {
-                    return ProjectCard(p: snapshot.data![index], framework: widget.l.framework,language: widget.l.language,);
-                  },
-                );
-              }),
+              child: FutureBuilder(
+                  future: getProjects(controller.sessionid, widget.l.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Error'));
+                    }
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return ProjectCard(
+                          p: snapshot.data![index],
+                          framework: widget.l.framework,
+                          language: widget.l.language,
+                        );
+                      },
+                    );
+                  }),
             ),
-
           ],
         ),
       ),

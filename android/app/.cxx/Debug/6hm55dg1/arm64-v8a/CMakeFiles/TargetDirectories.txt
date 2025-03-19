@@ -1,0 +1,2 @@
+C:/Users/nadam/Desktop/SalamHack/five/android/app/.cxx/Debug/6hm55dg1/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/nadam/Desktop/SalamHack/five/android/app/.cxx/Debug/6hm55dg1/arm64-v8a/CMakeFiles/rebuild_cache.dir

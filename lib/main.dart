@@ -37,56 +37,73 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return GetBuilder<MainController>(
       init: MainController(),
-      builder:(controller)=> Scaffold(
-
+      builder: (controller) => Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100.0), // Set the desired height here
+          preferredSize: const Size.fromHeight(100.0),
           child: AppBar(
-            actions: [
-              IconButton(
-                onPressed: () {
-                  SuggestBottomSheet.show(
-                    context,
-                    (learningData) {
-                      // Handle the new learning data
-                      print(learningData);
-                      // Navigate or update state as needed
-                    },
-                  );
-                },
-                icon: const Icon(Icons.help_outline),
-              ),
-            ],
+            toolbarHeight: 100,
+            iconTheme: IconThemeData(
+              color: const Color.fromARGB(
+                  255, 255, 255, 255), //change your color here
+            ),
+            leading: IconButton(
+              onPressed: () {
+                SuggestBottomSheet.show(
+                  context,
+                  (learningData) {
+                    print(learningData);
+                  },
+                );
+              },
+              icon: const Icon(Icons.help_outline),
+            ),
             titleSpacing: 10,
             backgroundColor: Colors.blueAccent,
-            title: const Text(
-              '!استعد لاكتشاف عالم البرمجة وتطوير مهاراتك',
-              maxLines: 2,
-              style: TextStyle(color: Colors.white, fontSize: 24),
-              textAlign: TextAlign.end,
+            title: const Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '!استعد لاكتشاف عالم البرمجة وتطوير مهاراتك',
+                    maxLines: 2,
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "ابدأ مشروع جديد عن طريق الضفط على الزر",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  )
+                ],
+              ),
             ),
           ),
         ),
         body: Column(
           children: [
             Expanded(
-              child: FutureBuilder(future: getLearnings(controller.sessionid), builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Error'));
-                }
-                if (snapshot.data?.length == 0) {
-                  return const Center(child: Text('لايوجد مسارات'));
-                }
-                return ListView.builder(
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: (context, index) {
-                    return LearningCard(l: snapshot.data![index]);
-                  },
-                );
-              }),
+              child: FutureBuilder(
+                  future: getLearnings(controller.sessionid),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Error'));
+                    }
+                    if (snapshot.data?.length == 0) {
+                      return const Center(child: Text('لايوجد مسارات'));
+                    }
+                    return ListView.builder(
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (context, index) {
+                        return LearningCard(l: snapshot.data![index]);
+                      },
+                    );
+                  }),
             ),
             Container(
               height: 50,
@@ -101,15 +118,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () {
                     NewJourneyBottomSheet.show(
                       context,
-
-                          (journeyData) {
+                      (journeyData) {
                         // Handle the new journey data
                         print(journeyData);
                         // Navigate or update state as needed
                       },
                     );
                   },
-                  child: const Text('Button Text', style: TextStyle(color: Colors.white),), // Add text or other content here
+                  child: const Text(
+                    'ابدأ رحلة جديدة',
+                    style: TextStyle(color: Colors.white),
+                  ), // Add text or other content here
                 ),
               ),
             ),

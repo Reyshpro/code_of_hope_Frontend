@@ -9,12 +9,13 @@ class MainController extends GetxController {
   @override
   void onInit() {
     getSessionId().then((value) {
-      if(value.isNotEmpty){
+      if (value.isNotEmpty) {
         sessionid = value;
         update();
         super.onInit();
-      }else{
-        String cahracters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+      } else {
+        String cahracters =
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
         String id = '';
         for (var i = 0; i < 10; i++) {
           id += cahracters[Random().nextInt(62)];
@@ -28,13 +29,13 @@ class MainController extends GetxController {
     });
   }
 
-  void refresh(){
-    update();
-  }
+  // void refresh(){
+  //  update();
+  // }
 
-  Future<String> getSessionId()async {
+  Future<String> getSessionId() async {
     String id = await storage.read(key: "id") ?? '';
-    return id ;
+    return id;
   }
 
   Future<void> setSessionId(String id) async {
