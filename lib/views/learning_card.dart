@@ -93,7 +93,7 @@ class LearningCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   "${l.language} - ${l.framework}",
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                 ),
               ],
             ),

@@ -80,12 +80,16 @@ class _TaskCardState extends State<TaskCard> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(widget.t.title, style: const TextStyle(fontSize: 20)),
-              Text(
-                widget.t.description,
-                style: const TextStyle(fontSize: 16),
-                textAlign: TextAlign.end,
-                maxLines: 3,
+              SizedBox(width: 300,child: Text(widget.t.title,textAlign: TextAlign.end,
+                  maxLines: 3, style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold))),
+              SizedBox(
+                width: 300,
+                child: Text(
+                  widget.t.description,
+                  style: const TextStyle(fontSize: 16),
+                  textAlign: TextAlign.end,
+                  maxLines: 3,
+                ),
               ),
             ],
           ),

@@ -68,8 +68,12 @@ class _AskAIPageState extends State<AskAIPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Help'),
-
+        iconTheme: IconThemeData(
+          color: const Color.fromARGB(
+              255, 255, 255, 255), //change your color here
+        ),
+        title:  Text('مساعدة', style: TextStyle(color:Colors.white),),
+        backgroundColor: Colors.blueAccent,
       ),
       // backgroundColor:,
       body: Container(
@@ -79,7 +83,7 @@ class _AskAIPageState extends State<AskAIPage> {
           //   borderRadius: BorderRadius.circular(20),
           //   color: Colors.white,
           // ),
-          padding: EdgeInsets.only(top: 40, bottom: 20, right: 40, left: 40),
+          padding: EdgeInsets.all(10),
           margin: EdgeInsets.all(20),
           child: Flexible(
             child: SingleChildScrollView(

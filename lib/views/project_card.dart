@@ -72,16 +72,24 @@ class ProjectCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  p.title,
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text(p.description,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                SizedBox(
+                  width: 300,
+                  child: Text(
+                    p.title,
+                      maxLines: 3,
                     textAlign: TextAlign.end,
-                    maxLines: 3),
+                    style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  width: 300,
+                  child: Text(p.description,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.end,
+                      maxLines: 3),
+                ),
                 const SizedBox(height: 8),
                 buildProgressBar(p.progress, p.tasknum),
               ],
